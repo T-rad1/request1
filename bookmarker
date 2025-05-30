@@ -1,0 +1,54 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+import time
+
+# تنظیمات اجرای بدون گرافیک
+options = Options()
+options.add_argument("--headless")
+options.add_argument("--disable-gpu")
+options.add_argument("--window-size=1920x1080")
+
+# راه‌اندازی مرورگر
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+# باز کردن صفحه لاگین
+driver.get("https://107112.samanpl.ir/Account/Login")
+
+# وارد کردن نام کاربری و رمز عبور
+username = "your username"
+password = "your password"
+
+# پیدا کردن فیلدها و لاگین
+username_input = driver.find_element(By.ID, "UserName")
+password_input = driver.find_element(By.ID, "Password")
+username_input.send_keys(username)
+password_input.send_keys(password)
+
+# کلیک روی دکمه ورود
+login_button = driver.find_element(By.XPATH, '//button[@type="submit"]')
+login_button.click()
+print("Login ✅")
+
+# صبر برای لود شدن
+time.sleep(3)
+
+# رفتن به بخش امانت‌های جاری
+driver.get("https://107112.samanpl.ir/borrow/currentborrows/MyBorrows")
+borrow_input = driver.find_element(By.ID, 'current')
+borrow_input.click()
+print("borrow part 💻")
+time.sleep(6)
+
+# پیدا کردن عنوان کتاب‌ها (مثلاً تگ‌های <td> یا <a> یا کلاس خاص مربوط به عنوان کتاب‌ها)
+book_titles = driver.find_elements(By.XPATH, '//*[@id="myTable"]/tbody/tr/td[3]')  # معمولاً ستون سوم اسم کتابه
+
+print("Your borrow books📚:")
+for book in book_titles:
+    print("- " + book.text)
+print("Finished ✅")
+
+# بستن مرورگر
+driver.quit()
