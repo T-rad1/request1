@@ -1,0 +1,22 @@
+# email_sender.py
+import yagmail
+
+def send_book_list_email(books, receiver_email, sender_email, app_password):
+    """
+    ارسال لیست کتاب‌ها به ایمیل مشخص‌شده.
+    
+    Parameters:
+    - books: list[str] → لیست نام کتاب‌ها
+    - receiver_email: str → ایمیل دریافت‌کننده
+    - sender_email: str → ایمیل فرستنده
+    - app_password: str → رمز اپلیکیشن جیمیل
+    """
+    #email_body = ":نام کتاب‌هایی که شما قرض گرفته‌اید\n\n" + "\n".join(f"- {title}" for title in books)
+    email_body = "📚 لیست کتاب‌های امانت‌گرفته‌شده:\n\n"
+    for book_name, due_date in books:  # باز کردن تاپل‌ها
+        email_body += f"{book_name} - موعد بازگشت: {due_date}\n"
+    
+    yag = yagmail.SMTP(user=sender_email, password=app_password)
+    yag.send(to=receiver_email, subject="📚 لیست کتاب‌های امانت‌گرفته‌شده", contents=email_body)
+    print("📨 ایمیل با موفقیت ارسال شد!")
+    
